@@ -10,7 +10,7 @@ const SCREEN_WIDTH = 400;
 const SCREEN_HEIGHT = 600;
 const FPS = 60;
 const GRAVITY = 0.5;
-const BIRD_JUMP = -10;
+const BIRD_JUMP = -7; // 减小跳跃幅度，使在手机上更容易控制
 const INITIAL_PIPE_SPEED = 3; // 初始管道速度
 const MIN_PIPE_SPEED = 8; // 最大管道速度
 const INITIAL_PIPE_GAP = 180; // 初始管道间隙
@@ -42,6 +42,7 @@ let pipeGap = INITIAL_PIPE_GAP;
 let missileCount = 0;
 let missileActive = false;
 let missileCooldown = 0;
+let missileButton; // 导弹按钮元素
 
 // 小鸟类
 class Bird {
@@ -401,6 +402,15 @@ function initGame() {
     backgroundScroll = 0;
     groundScroll = 0;
     gameOver.style.display = 'none';
+    
+    // 获取导弹按钮元素
+    if (!missileButton) {
+        missileButton = document.getElementById('missileButton');
+        missileButton.addEventListener('click', handleMissileButtonClick);
+    }
+    
+    updateMissileButtonVisibility();
+    
     lastTime = performance.now();
     startGameLoop();
 }
@@ -466,6 +476,9 @@ function gameLoop(currentTime) {
     if (missileCooldown > 0) {
         missileCooldown--;
     }
+    
+    // 更新导弹按钮可见性
+    updateMissileButtonVisibility();
 
     // 继续游戏循环
     animationId = requestAnimationFrame(gameLoop);
@@ -659,6 +672,32 @@ function endGame() {
     cancelAnimationFrame(animationId);
     finalScore.textContent = score;
     gameOver.style.display = 'flex';
+    // 游戏结束时隐藏导弹按钮
+    if (missileButton) {
+        missileButton.classList.remove('visible');
+    }
+}
+
+// 处理导弹按钮点击
+function handleMissileButtonClick() {
+    if (gameRunning && missileCount > 0 && missileCooldown === 0) {
+        // 发射导弹
+        missiles.push(new Missile(bird.x + bird.width, bird.y + bird.height / 2));
+        missileCount--;
+        missileCooldown = 20; // 冷却时间
+        updateMissileButtonVisibility();
+    }
+}
+
+// 更新导弹按钮可见性
+function updateMissileButtonVisibility() {
+    if (missileButton) {
+        if (gameRunning && missileCount > 0 && missileCooldown === 0) {
+            missileButton.classList.add('visible');
+        } else {
+            missileButton.classList.remove('visible');
+        }
+    }
 }
 
 // 处理按键事件
