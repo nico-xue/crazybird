@@ -80,11 +80,52 @@ body {
     background-color: #2980b9;
 }
 
+/* 导弹按钮样式 */
+.missile-button {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 10;
+    display: none; /* 默认隐藏 */
+}
+
+.missile-button.visible {
+    display: block;
+}
+
+.missile-button:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.missile-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 /* 响应式设计 */
 @media (max-width: 450px) {
     #gameCanvas {
         width: 100%;
         height: auto;
         max-height: 80vh;
+    }
+    
+    .missile-button {
+        padding: 20px 30px; /* 在手机上增大按钮大小 */
+        font-size: 18px;
+        bottom: 30px;
+        right: 30px;
     }
 }
